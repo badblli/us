@@ -80,7 +80,8 @@ onMounted(() => {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100%;
+  margin-top: 100px;
 }
 
 .heart {
