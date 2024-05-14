@@ -12,10 +12,10 @@
         accept="image/*"
       />
       <!-- Icon buton -->
-      <p @click="openFileInput">
+      <!-- <p @click="openFileInput">
         <i class="fa-solid fa-paperclip"></i
         ><span v-if="!selectedFileName">Dosya Ekle</span>
-      </p>
+      </p> -->
       <!-- Dosya adını göster -->
       <div v-if="selectedFileName">Dosya Seçildi</div>
       <button @click="saveNote">
@@ -25,6 +25,7 @@
 
     <div class="note-list">
       <div v-for="(note, index) in reversedNotes" :key="index" class="note">
+        <img class="img" :src="note.image" v-if="note.image" alt="Note Image" />
         <p
           v-if="
             !isSpotifyTrackLink(note.text) && !isSpotifyPlaylistLink(note.text)
@@ -41,7 +42,7 @@
           allowtransparency="true"
           allow="encrypted-media"
         ></iframe>
-        <img class="img" :src="note.image" v-if="note.image" alt="Note Image" />
+
         <small>{{ note.timestamp }}</small>
         <!-- <button @click="editNote(index)">Edit</button>
     <button @click="deleteNote(index)">Delete</button> -->
