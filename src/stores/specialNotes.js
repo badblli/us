@@ -19,6 +19,13 @@ export const useSpecialNotesStore = defineStore('specialNotes', {
                             image: "https://i.hizliresim.com/55vgux9.jpg",
                             timestamp: note.timestamp
                         };
+                    }
+                    else if (note.id === 29) {
+                        return {
+                            text: note.text,
+                            image: "https://i.hizliresim.com/k6fk9qr.jpg",
+                            timestamp: note.timestamp
+                        };
                     } else {
                         return {
                             text: note.text,
