@@ -135,6 +135,10 @@ export default defineComponent({
       }
     },
   },
+  mounted() {
+    // Notlar sayfasına yüklendiğinde, dosya seçme alanını gizle
+    useSpecialNotesStore().getNotes();
+  },
 });
 </script>
 
