@@ -10,7 +10,7 @@ export const useSpecialNotesStore = defineStore('specialNotes', {
     },
     actions: {
         getNotes() {
-            axios.get('http://138.68.111.238:1337/api/notes').then((response) => {
+            axios.get('https://usapi.badblli.dev/api/notes').then((response) => {
                 this.notes = response.data.data;
             }).catch((error) => {
                 console.error('Hata oluştu:', error);
@@ -26,7 +26,7 @@ export const useSpecialNotesStore = defineStore('specialNotes', {
                 }
             };
 
-            axios.post('http://138.68.111.238:1337/api/notes', data)
+            axios.post('https://usapi.badblli.dev/api/notes', data)
                 .then(function (response) {
                     // Başarılı cevap durumunda burası çalışır
                     console.log('Sunucudan gelen cevap:', response);
