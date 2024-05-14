@@ -9,10 +9,11 @@
         ref="fileInput"
         style="display: none"
         @change="handleFileChange"
+        accept="image/*"
       />
       <!-- Icon buton -->
       <p @click="openFileInput">
-        <i class="fas fa-file"></i
+        <i class="fa-solid fa-paperclip"></i
         ><span v-if="!selectedFileName">Dosya Ekle</span>
       </p>
       <!-- Dosya adını göster -->
@@ -24,18 +25,26 @@
 
     <div class="note-list">
       <div v-for="(note, index) in reversedNotes" :key="index" class="note">
-        <div class="note-area">
-          <p>{{ note.text }}</p>
-          <img
-            class="img"
-            :src="note.image"
-            v-if="note.image"
-            alt="Note Image"
-          />
-        </div>
-        <small class="timestamp">{{ note.timestamp }}</small>
+        <p
+          v-if="
+            !isSpotifyTrackLink(note.text) && !isSpotifyPlaylistLink(note.text)
+          "
+        >
+          {{ note.text }}
+        </p>
+        <iframe
+          v-else
+          :src="convertToSpotifyEmbed(note.text)"
+          width="300"
+          height="80"
+          frameborder="0"
+          allowtransparency="true"
+          allow="encrypted-media"
+        ></iframe>
+        <img class="img" :src="note.image" v-if="note.image" alt="Note Image" />
+        <small>{{ note.timestamp }}</small>
         <!-- <button @click="editNote(index)">Edit</button>
-        <button @click="deleteNote(index)">Delete</button> -->
+    <button @click="deleteNote(index)">Delete</button> -->
       </div>
     </div>
   </div>
@@ -95,16 +104,40 @@ export default defineComponent({
     openFileInput() {
       this.$refs.fileInput.click();
     },
-    editNote(index) {
-      this.note = this.notes[index].text;
-      this.editingIndex = index;
+    isSpotifyTrackLink(text) {
+      // Spotify track linkini kontrol etmek için regex kullanma
+      return /https:\/\/open\.spotify\.com\/intl-tr\/track\/\w+/i.test(text);
     },
-    deleteNote(index) {
-      useSpecialNotesStore().deleteNote(index);
+
+    isSpotifyPlaylistLink(text) {
+      // Spotify playlist linkini kontrol etmek için regex kullanma
+      return /https:\/\/open\.spotify\.com\/playlist\/\w+/i.test(text);
+    },
+
+    convertToSpotifyEmbed(link) {
+      // Spotify linkini gömülü çalar linkine dönüştürme
+      if (this.isSpotifyTrackLink(link)) {
+        // Track linki ise, uygun embed formatında oluştur
+        return (
+          link.replace(
+            "https://open.spotify.com/intl-tr/track/",
+            "https://open.spotify.com/embed/track/"
+          ) + "?utm_source=generator"
+        );
+      } else if (this.isSpotifyPlaylistLink(link)) {
+        // Playlist linki ise, uygun embed formatında oluştur
+        return link.replace(
+          "https://open.spotify.com/",
+          "https://open.spotify.com/embed/"
+        );
+      } else {
+        return link; // Spotify linki değilse doğrudan linki döndür
+      }
     },
   },
 });
 </script>
+
 <style scoped>
 .special-notes {
   margin: 20px;
