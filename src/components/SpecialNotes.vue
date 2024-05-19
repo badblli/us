@@ -25,7 +25,9 @@
 
     <div class="note-list">
       <div v-for="(note, index) in reversedNotes" :key="index" class="note">
-        <img class="img" :src="note.image" v-if="note.image" alt="Note Image" />
+        <div v-if="note.image != null" class="img-container">
+          <img class="img" :src="note.image" alt="Note Image" />
+        </div>
         <p
           v-if="
             !isSpotifyTrackLink(note.text) && !isSpotifyPlaylistLink(note.text)
@@ -170,12 +172,20 @@ export default defineComponent({
   align-items: flex-start;
   gap: 10px;
 }
+.img-container {
+  width: 100%;
+  max-height: 200px; /* Set a maximum height */
+  overflow: hidden;
+  max-width: 300px;
+  margin-bottom: 10px;
+  aspect-ratio: 16 / 9; /* Or any aspect ratio you prefer */
+}
 
 .img {
-  width: 200px; /* Set the width */
-  height: 200px; /* Set the height to create a square */
-  object-fit: cover; /* Ensure the image covers the entire container */
-  overflow: hidden; /* Hide any overflow beyond the container */
+  width: 100%; /* Set the width to fill its container */
+  height: 100%; /* Let the height adjust according to aspect ratio */
+  object-fit: contain; /* Ensure the image covers the entire container */
+  border-radius: 10px;
 }
 
 textarea {
