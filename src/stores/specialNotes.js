@@ -10,7 +10,7 @@ export const useSpecialNotesStore = defineStore('specialNotes', {
     },
     actions: {
         getNotes() {
-            axios.get('https://usapi.badblli.dev/api/notes?populate=*?').then((response) => {
+            axios.get('https://usapi.badblli.dev/api/notes?populate=*').then((response) => {
                 console.log('Sunucudan gelen cevap:', response.data.data);
                 let note = response.data.data.map((note) => {
 
