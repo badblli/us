@@ -10,22 +10,16 @@ export const useSpecialNotesStore = defineStore('specialNotes', {
     },
     actions: {
         getNotes() {
-            axios.get('https://usapi.badblli.dev/api/notes?populate=*').then((response) => {
+            axios.get('https://usapi.badblli.dev/api/notes?populate=*?').then((response) => {
                 console.log('Sunucudan gelen cevap:', response.data.data);
                 let note = response.data.data.map((note) => {
-                    if (note.id === 29) {
-                        return {
-                            text: note.text,
-                            image: "https://i.hizliresim.com/k6fk9qr.jpg",
-                            timestamp: note.timestamp
-                        };
-                    } else {
-                        return {
-                            text: note.text,
-                            image: note.image.url ? 'https://usapi.badblli.dev' + note.image.url : null,
-                            timestamp: note.timestamp
-                        };
-                    }
+
+                    return {
+                        text: note.text,
+                        image: note.image.url ? 'https://usapi.badblli.dev' + note.image.url : null,
+                        timestamp: note.timestamp
+                    };
+
                 });
                 console.log(note);
 

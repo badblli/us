@@ -22,9 +22,27 @@
         {{ editingIndex === null ? "Kaydet" : "Güncelle" }}
       </button>
     </div>
-
-    <div class="note-list">
-      <div v-for="(note, index) in reversedNotes" :key="index" class="note">
+    <!-- Tarih filtreleme arayüzü -->
+    <div class="date-filters">
+      <button
+        v-for="date in reversedDates"
+        :key="date"
+        @click="selectedDate = date"
+        :class="{ active: selectedDate === date }"
+      >
+        {{ date }}
+      </button>
+      <button
+        @click="selectedDate = null"
+        :class="{ active: selectedDate === null }"
+      >
+        Tümü
+      </button>
+    </div>
+    <!-- Notlar listesi -->
+    <div v-for="(group, date) in groupedNotes" :key="date">
+      <h3>{{ date }}</h3>
+      <div v-for="(note, index) in group" :key="index" class="note">
         <div v-if="note.image != null" class="img-container">
           <img class="img" :src="note.image" alt="Note Image" />
         </div>
@@ -46,8 +64,6 @@
         ></iframe>
 
         <small>{{ note.timestamp }}</small>
-        <!-- <button @click="editNote(index)">Edit</button>
-    <button @click="deleteNote(index)">Delete</button> -->
       </div>
     </div>
   </div>
@@ -61,6 +77,7 @@ export default defineComponent({
   name: "SpecialNotes",
   data() {
     return {
+      selectedDate: null,
       note: "",
       editingIndex: null,
       selectedFile: null, // Seçilen dosyayı tutmak için
@@ -68,11 +85,39 @@ export default defineComponent({
     };
   },
   computed: {
+    active() {
+      return Object.keys(grouped)[Object.keys(grouped).length - 1];
+    },
     notes() {
       return useSpecialNotesStore().notes;
     },
-    reversedNotes() {
-      return this.notes.slice().reverse(); // Notları ters sırayla döndür
+    reversedDates() {
+      return this.dates.slice().reverse();
+    },
+    dates() {
+      // Notların tarihlerini alma ve tekrar etmeyenleri filtreleme
+      const uniqueDates = new Set(
+        this.notes.map((note) => note.timestamp.split(" ")[0])
+      );
+      return Array.from(uniqueDates);
+    },
+    groupedNotes() {
+      // Seçilen tarihe göre notları gruplama
+      const grouped = {};
+      const filteredNotes = this.notes.filter((note) => {
+        return (
+          !this.selectedDate ||
+          note.timestamp.split(" ")[0] === this.selectedDate
+        );
+      });
+      filteredNotes.forEach((note) => {
+        const date = note.timestamp.split(" ")[0];
+        if (!grouped[date]) {
+          grouped[date] = [];
+        }
+        grouped[date].push(note);
+      });
+      return grouped;
     },
   },
   methods: {
@@ -138,15 +183,38 @@ export default defineComponent({
       }
     },
   },
+  watch: {},
   mounted() {
     // Notlar sayfasına yüklendiğinde, dosya seçme alanını gizle
     useSpecialNotesStore().getNotes();
+    if (this.reversedDates.length > 0) {
+      this.selectedDate = this.reversedDates[0];
+    }
   },
 });
 </script>
 
 <style scoped>
+.date-filters {
+  margin-top: 20px;
+}
+
+.date-filters button {
+  margin-right: 10px;
+  background-color: #b6b2bb;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 5px 0px 0px rgb(58, 56, 63);
+}
+
+.date-filters button.active {
+  background-color: #4400ff;
+  color: #fff;
+}
 .special-notes {
+  width: 80%;
   margin: 20px;
 }
 .timestamp {
