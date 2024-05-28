@@ -36,7 +36,8 @@ onMounted(() => {
     if (grayscaleValue < 0) {
       clearInterval(interval);
     } else {
-      image.style.filter = `grayscale(${grayscaleValue}%)`;
+      image.style.filter = `grayscale(${100}%)`;
+      // image.style.filter = `grayscale(${grayscaleValue}%)`;
     }
   }, 200);
 
@@ -49,10 +50,12 @@ onMounted(() => {
 <template>
   <div class="aboutus">
     <img class="img" src="/img/us.jpg" alt="us" />
-    <i>19.04.2024</i>
+    <p>19042505</p>
     <div class="calculate">
-      <h4>{{ formattedDuration }}</h4>
-      <span class="heart">💖</span>
+      <h4>36 gün 13 saat 44 dakika 47 saniye</h4>
+      <span>🖤</span>
+      <!-- <h4>{{ formattedDuration }}</h4> -->
+      <!-- <span class="heart">💖</span> -->
     </div>
     <SpecialNotes />
   </div>
